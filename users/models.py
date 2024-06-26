@@ -72,4 +72,35 @@ class CustomUser(AbstractUser):
     def get_user_id(self):
         return self.id
         
-            
+
+# models.py
+
+# models.py
+
+from django.db import models
+from django.conf import settings
+from django.utils import timezone
+import uuid
+import random
+
+class EmailVerification(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    code = models.CharField(max_length=6)  # Шестизначный код подтверждения
+    created_at = models.DateTimeField(auto_now_add=True)
+    verified = models.BooleanField(default=False)
+
+    def generate_code(self):
+        return str(random.randint(100000, 999999))  # Генерация случайного шестизначного кода
+
+    def is_expired(self):
+        expiration_time = timezone.now() - timezone.timedelta(hours=1)  # Настройте время действия по желанию
+        return self.created_at < expiration_time
+
+    def mark_as_verified(self):
+        self.verified = True
+        self.save()
+
+    class Meta:
+        verbose_name = 'Email Verification'
+        verbose_name_plural = 'Email Verifications'
+

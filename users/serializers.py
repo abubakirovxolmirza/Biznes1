@@ -3,7 +3,10 @@ from .models import CustomUser
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import CustomUser
+from .models import CustomUser, EmailVerification
+  
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,7 +16,21 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = CustomUser.objects.create_user(**validated_data)
+
+        # Generate and save email verification code
+        verification_code = EmailVerification(user=user)
+        verification_code.code = verification_code.generate_code()
+        verification_code.save()
+
+        # Send verification email
+        self.send_verification_email(user.email, verification_code.code)
+
         return user
+
+    def send_verification_email(self, to_email, code):
+        subject = 'Email Verification Code'
+        message = f'Your verification code is: {code}'
+        send_mail(subject, message, None, [to_email], fail_silently=False)
     
 
 class CustomTokenObtainPairSerializer(serializers.Serializer):
