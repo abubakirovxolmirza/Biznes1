@@ -51,9 +51,10 @@ class CustomUser(AbstractUser):
     age = models.IntegerField(blank=True, null=True)
     vab = models.ForeignKey(HistoryBalls, on_delete=models.CASCADE, blank=True, null=True)
     tasks = models.ForeignKey(Tasks, on_delete=models.CASCADE, blank=True, null=True)
-    reyting = models.CharField(max_length=250, blank=True, null=True)
+    reyting = models.FloatField(blank=True, null=True)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, blank=True, null=True)
     role = models.CharField(max_length=50, choices=ROLES_CHOICES, blank=True, null=True)
+    group_id = models.ForeignKey('Group', on_delete=models.CASCADE, blank=True, null=True)
     permission = models.CharField(max_length=70, blank=True, null=True)
     history_tasks = models.CharField(max_length=50, blank=True, null=True)
     history_balls = models.CharField(max_length=70, blank=True, null=True)
@@ -71,6 +72,26 @@ class CustomUser(AbstractUser):
     
     def get_user_id(self):
         return self.id
+        
+class Group(models.Model):
+    ROLES_CHOICES = [
+    ('General', 'General'),
+    ('Mayor', 'Mayor'),
+    ('Captain', 'Captain'),
+    ('Leytenant', 'Leytenant'),
+    ('Serjant', 'Serjant'),
+    ('Kursant', 'Kursant'),
+    ('Saldat', 'Saldat'),
+
+]
+    
+    name = models.CharField(max_length=200, blank=True, null=True)
+    count = models.IntegerField(blank=True, null=True)
+    admin = models.CharField(max_length=200, choices=ROLES_CHOICES, blank=True, null=True)   
+    rate = models.FloatField(blank=True, null=True)
+    shiori = models.CharField(max_length=200, blank=True, null=True)
+    users = models.ManyToManyField('CustomUser', blank=True, null=True)     
+    generate_code = models.CharField(max_length=10, null=True, blank=True)
         
 
 # models.py
@@ -103,4 +124,39 @@ class EmailVerification(models.Model):
     class Meta:
         verbose_name = 'Email Verification'
         verbose_name_plural = 'Email Verifications'
+        
+import random
+import string  # Import string module for alphanumeric characters
 
+
+
+# models.py
+
+from django.db import models
+from django.utils import timezone
+import random
+import string
+# from armiya.models import Group  # Импортируем модель Group из armiya.models
+
+class GrCode(models.Model):
+    gr_name = models.ForeignKey(Group, on_delete=models.CASCADE)
+    gr_code = models.CharField(max_length=10, unique=True)
+
+    def generate_code(self):
+        # Генерируем случайный код длиной 10 из букв и цифр
+        return ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+
+    def save(self, *args, **kwargs):
+        if not self.gr_code:
+            self.gr_code = self.generate_code()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.gr_name} - {self.gr_code}'
+
+
+class CheckGr(models.Model):
+    code = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.code

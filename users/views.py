@@ -3,8 +3,8 @@ from rest_framework import generics
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
-from .serializers import CustomUserSerializer
-from .models import CustomUser
+from .serializers import CustomUserSerializer, GroupSerializer
+from .models import CustomUser, Group, EmailVerification, GrCode, CheckGr
 from rest_framework import permissions
 from .token import get_tokens_for_user
 from rest_framework.views import APIView
@@ -72,3 +72,53 @@ class VerifyEmailView(APIView):
         user.save()
 
         return Response({'detail': 'Email successfully verified'}, status=status.HTTP_200_OK)
+
+class ListGroupView(generics.ListAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    # permission_classes = [permissions.IsAuthenticated]
+    
+
+class GroupDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    # permission_classes = [permissions.IsAuthenticated]
+    
+
+# views.py
+
+# views.py
+
+from rest_framework import generics, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import CustomUser, EmailVerification, GrCode, CheckGr
+from .serializers import CustomUserSerializer, GrCodeSerializer
+
+class GrCodeCreateView(APIView):
+    def post(self, request):
+        try:
+            group_id = request.data.get('group_id')  # Получаем идентификатор группы из запроса
+            group_instance = Group.objects.get(id=group_id)  # Получаем экземпляр группы по идентификатору
+        except Group.DoesNotExist:
+            return Response({'detail': 'Group does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+        gr_code_instance = GrCode(gr_name=group_instance)
+        gr_code_instance.save()  # Код будет автоматически сгенерирован при сохранении
+
+        serializer = GrCodeSerializer(gr_code_instance)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+
+class CheckGrView(APIView):
+    def post(self, request):
+        code = request.data.get('code')
+
+        try:
+            check_instance = GrCode.objects.get(gr_code=code)
+            gr_name = check_instance.gr_name.name
+            gr_id = check_instance.gr_name.id
+            return Response({'detail': 'Group name found', 'group_id': gr_id, 'gr_name': gr_name}, status=status.HTTP_200_OK)
+        except GrCode.DoesNotExist:
+            return Response({'detail': 'Invalid code'}, status=status.HTTP_404_NOT_FOUND)

@@ -3,7 +3,7 @@ from .models import CustomUser
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import CustomUser, EmailVerification
+from .models import CustomUser, EmailVerification, Group
   
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -53,3 +53,24 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
             'role': user.get_role(),
             'user_id': user.id,
         }
+        
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = '__all__'
+        
+# serializers.py
+
+from rest_framework import serializers
+from .models import CustomUser, GrCode, CheckGr
+
+class GrCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GrCode
+        fields = ('id', 'gr_name', 'gr_code')
+        read_only_fields = ('gr_code',)  # gr_code будет сгенерирован автоматически
+
+class CheckGrSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CheckGr
+        fields = ('id', 'code')
