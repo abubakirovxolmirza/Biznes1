@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'armiya',
     'corsheaders',
     'drf_spectacular',
+    'tinymce',
 ]
 # ASGI_APPLICATION = 'core.asgi.application'
 

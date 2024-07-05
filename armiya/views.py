@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from .models import Auktsion, Buyum, Tasks, HistoryBalls, Balls
-from .serializers import AuktsionSerializer, BuyumTaskssSerializer, TasksSerializer, HistoryBallsSerializer, BallsSerializer
+from .models import Auktsion, Buyum, Tasks, HistoryBalls, Balls, Yangiliklar, Talablar, Sh_rivojlanish
+from .serializers import AuktsionSerializer, BuyumTaskssSerializer, TasksSerializer, HistoryBallsSerializer, BallsSerializer, YangiliklarSerializer, TalablarSerializer, Sh_rivojlanishSerializer
 from rest_framework import permissions
 
 # Create your views here.
@@ -12,10 +12,11 @@ class AuktsionCreateListView(ListCreateAPIView):
     serializer_class = AuktsionSerializer
     permission_classes = [permissions.IsAuthenticated]
     
-# class HtasksCreateListView(ListCreateAPIView):
-#     queryset = Htasks.objects.all()
-#     serializer_class = HtasksSerializer
-    
+class YangiliklarCreateListView(ListCreateAPIView):
+    queryset = Yangiliklar.objects.all()
+    serializer_class = YangiliklarSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
     
 class BuyumCreateListView(ListCreateAPIView):
     queryset = Buyum.objects.all()
@@ -34,16 +35,21 @@ class HistoryBallsCreateListView(ListCreateAPIView):
     serializer_class = HistoryBallsSerializer
     permission_classes = [permissions.IsAuthenticated]
     
-# class HistoryTasksCreateListView(ListCreateAPIView):
-#     queryset = HistoryTasks.objects.all()
-#     serializer_class = HistoryTasksSerializer
-    
+class TalablarCreateListView(ListCreateAPIView):
+    queryset = Talablar.objects.all()
+    serializer_class = TalablarSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
     
 class BallsTasksCreateListView(ListCreateAPIView):
     queryset = Balls.objects.all()
     serializer_class = BallsSerializer
     permission_classes = [permissions.IsAuthenticated]
     
+class Sh_rivojlanishCreateListView(ListCreateAPIView):
+    queryset = Sh_rivojlanish.objects.all()
+    serializer_class = Sh_rivojlanishSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     
 
@@ -67,24 +73,32 @@ class HistoryBallsDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = HistoryBallsSerializer
     permission_classes = [permissions.IsAuthenticated]
     
-# class HistoryTasksDetailView(RetrieveUpdateDestroyAPIView):
-#     queryset = HistoryTasks.objects.all()
-#     serializer_class = HistoryTasksSerializer
-    
     
 class BallsTasksDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Balls.objects.all()
     serializer_class = BallsSerializer
     permission_classes = [permissions.IsAuthenticated]
     
-# class HtasksDetailView(RetrieveUpdateDestroyAPIView):
-#     queryset = Htasks.objects.all()
-#     serializer_class = HtasksSerializer
-    
+
 class DoneTasksListView(ListAPIView):
     serializer_class = TasksSerializer
     permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
         return Tasks.objects.filter(status='Done')
+    
+class TalablarDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Talablar.objects.all()
+    serializer_class = TalablarSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+class YangiliklarDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Yangiliklar.objects.all()
+    serializer_class = YangiliklarSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+class Sh_rivojlanishDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Sh_rivojlanish.objects.all()
+    serializer_class = Sh_rivojlanishSerializer
+    permission_classes = [permissions.IsAuthenticated]
     

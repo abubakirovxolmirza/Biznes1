@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Tasks, HistoryBalls, Buyum, Auktsion, Balls
+from .models import Tasks, HistoryBalls, Buyum, Auktsion, Balls, Talablar, Sh_rivojlanish, Yangiliklar
 
 class TasksSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,7 +37,18 @@ class BallsSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 
-# class HtasksSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Htasks
-#         fields = '__all__'
+class YangiliklarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Yangiliklar
+        fields = '__all__'
+
+class Sh_rivojlanishSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sh_rivojlanish
+        fields = '__all__'
+        
+
+class TalablarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Talablar
+        fields = '__all__'

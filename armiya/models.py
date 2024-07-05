@@ -1,8 +1,17 @@
 from django.db import models
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from tinymce.models import HTMLField
 # from users.models import CustomUser
 # Create your models here.
+class Yangiliklar(models.Model):
+    content = HTMLField()
+    
+class Talablar(models.Model):
+    content = HTMLField()
+    
+class Sh_rivojlanish(models.Model):
+    content = HTMLField()
     
     
 class Tasks(models.Model):
@@ -60,7 +69,6 @@ class Balls(models.Model):
     ball = models.IntegerField()
     definition = models.CharField(max_length=250)
     tasks_id = models.ForeignKey(Tasks, on_delete=models.CASCADE)
-    
     # def save(self, *args, **kwargs):
     #     super().save(*args, **kwargs)
     #     channel_layer = get_channel_layer()
