@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure--&uh0uu53v75ivw!j_qr@-zijn)b=xxm6_w-^awpun_^rd!c^_
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-# ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['13.60.80.160']
+ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['13.60.80.160']
 
 
 # Application definition
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_spectacular',
     'tinymce',
+    'ckeditor',
 ]
 # ASGI_APPLICATION = 'core.asgi.application'
 
@@ -156,7 +157,22 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = 'static/'
-
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+# CKEditor Settings
+CKEDITOR_UPLOAD_PATH = 'uploads/'
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js' 
+CKEDITOR_CONFIGS = {
+    'default':
+        {
+            'toolbar': 'full',
+            'width': 'auto',
+            'extraPlugins': ','.join([
+                'codesnippet',
+            ]),
+        },
+}
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

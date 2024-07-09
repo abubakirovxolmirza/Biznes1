@@ -1,17 +1,17 @@
 from django.db import models
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from tinymce.models import HTMLField
+from ckeditor_uploader.fields import RichTextUploadingField
 # from users.models import CustomUser
 # Create your models here.
 class Yangiliklar(models.Model):
-    content = HTMLField()
+    content = RichTextUploadingField()
     
 class Talablar(models.Model):
-    content = HTMLField()
+    content = RichTextUploadingField()
     
 class Sh_rivojlanish(models.Model):
-    content = HTMLField()
+    content = RichTextUploadingField()
     
     
 class Tasks(models.Model):
